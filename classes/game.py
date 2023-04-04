@@ -15,7 +15,7 @@ class Cell:
     def draw(self, alive=False):
         if self.object_id:
             self.canvas.delete(self.object_id)
-        
+
         self.object_id = self.canvas.create_rectangle(
             self.x, self.y, self.x1, self.y1, fill='black' if not alive else 'white', outline='white')
 
@@ -77,27 +77,27 @@ class Universe:
         y_clicked = int(event.y / self.cell_width)
 
         self.cells[x_clicked][y_clicked].toggle_state()
-        
+
     def calculate_neighbors_range(self, coord):
         neighbor_range_inf = coord - 1 if coord - 1 > 0 else 0
-        neighbor_range_sup = coord + 1 if coord + 1 < self.cells_number else self.cells_number - 1
+        neighbor_range_sup = coord + 1 if coord + \
+            1 < self.cells_number else self.cells_number - 1
         return (neighbor_range_inf, neighbor_range_sup)
-       
+
     def get_alive_neighbors(self, i, j):
         x_range_inf, x_range_sup = self.calculate_neighbors_range(i)
         y_range_inf, y_range_sup = self.calculate_neighbors_range(j)
-                
+
         alive_neighbors = 0
         for x in range(x_range_inf, x_range_sup + 1):
             for y in range(y_range_inf, y_range_sup + 1):
                 if x == i and y == j:
                     continue
-                
+
                 if self.cells[x][y].is_alive:
                     alive_neighbors += 1
-        
+
         return alive_neighbors
-        
 
     def tick(self):
         new_states = []
@@ -105,18 +105,18 @@ class Universe:
         column_number = len(self.cells)
         for i in range(column_number):
             row_number = len(self.cells[i])
-                
-            if i >  0:
+
+            if i > 0:
                 new_states.append(new_states_column)
                 new_states_column = []
-            
+
             for j in range(row_number):
                 current_cell = self.cells[i][j]
 
                 live = current_cell.is_alive
 
                 alive_neighbors = self.get_alive_neighbors(i, j)
-                
+
                 if not live and alive_neighbors == 3:
                     live = True
 
@@ -132,5 +132,5 @@ class Universe:
         for i in range(len(new_states)):
             for j in range(len(new_states[i])):
                 cell_lives = new_states[i][j]
-                self.cells[i][j].change_state(cell_lives)
-            
+                cell_lives != self.cells[i][j].is_alive and self.cells[i][j].change_state(
+                    cell_lives)
